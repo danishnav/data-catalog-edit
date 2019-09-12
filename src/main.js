@@ -1,27 +1,29 @@
-  
-import * as React from 'react'
-import {Client as Styletron} from 'styletron-engine-atomic';
-import {Provider as StyletronProvider} from 'styletron-react';
-import {LightTheme, BaseProvider, styled} from 'baseui';
+import * as React from "react";
+import { Client as Styletron } from "styletron-engine-atomic";
+import { Provider as StyletronProvider } from "styletron-react";
+import { LightTheme, BaseProvider, styled } from "baseui";
+import { Block } from "baseui/block";
+import { BrowserRouter as Router } from "react-router-dom";
+import { ThemeProvider } from "@data-catalog/theme";
 
-import EditPage from './pages/EditPage'
-
-const engine = new Styletron();
+import Routes from "./routes";
 
 class Main extends React.Component {
-  render() {
+    render() {
+        const { history } = this.props;
 
-    return (
-      <React.Fragment>
-            <StyletronProvider value={engine}>
-              <BaseProvider theme={LightTheme}>
-                <EditPage />
-              </BaseProvider>
-            </StyletronProvider>
-      </React.Fragment>
-
-    )
-  }
+        return (
+            <React.Fragment>
+                <ThemeProvider>
+                    <Block padding="3rem 10rem" height="100%">
+                        <Router history={history}>
+                            <Routes />
+                        </Router>
+                    </Block>
+                </ThemeProvider>
+            </React.Fragment>
+        );
+    }
 }
 
-export default Main
+export default Main;
