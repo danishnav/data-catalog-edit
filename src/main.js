@@ -5,6 +5,7 @@ import { LightTheme, BaseProvider, styled } from "baseui";
 import { Block } from "baseui/block";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "@data-catalog/theme";
+import { Header } from "@data-catalog/header"
 
 import Routes from "./routes";
 
@@ -15,7 +16,8 @@ class Main extends React.Component {
         return (
             <React.Fragment>
                 <ThemeProvider>
-                    <Block margin="0 auto" width="80%" height="100%">
+                    <Header />
+                    <Block margin="0 auto" paddingTop="1rem" width="80%" height="100%">
                         <Router history={history}>
                             <Routes />
                         </Router>

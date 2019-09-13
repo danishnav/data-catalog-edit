@@ -3,6 +3,9 @@ import * as React from "react";
 import { Block } from "baseui/block";
 import DatasetForm from "../components/Form";
 import axios from "axios";
+import { Card } from 'baseui/card';
+import { Button, SHAPE, KIND as ButtonKind } from "baseui/button";
+import { Paragraph2 } from 'baseui/typography';
 
 const server = process.env.REACT_APP_BACKEND_ENDPOINT;
 
@@ -18,19 +21,34 @@ let initialFormValues = {
     keywords: []
 };
 
+function renderSuccessMessage(message: any | object) {
+    return (
+        <Block marginBottom="2rem">
+            <Card>
+                <Paragraph2>{message}</Paragraph2>
+            </Card>
+        </Block>
+    )
+}
+
 const CreatePage = (props: any) => {
+    const [isCreated, setCreated] = React.useState<boolean>(false);
+
     const handleSubmit = (values: object) => {
         let body = [values];
-        axios.post(`${server}`, body).then(res => console.log(res));
+        //axios.post(`${server}`, body).then(res => console.log(res));
         console.log("submitted", body);
+        setCreated(true)
     };
 
     return (
         <React.Fragment>
             <Block>
-                <Block alignItems="center" width="100%">
-                    <h1>Opprett nytt Datasett</h1>
-                </Block>
+                <h1>Datasett</h1>
+                {isCreated ?
+                    renderSuccessMessage('Datasettet er nå opprettet.')
+                : null}
+
                 <DatasetForm
                     formInitialValues={initialFormValues}
                     submit={handleSubmit}

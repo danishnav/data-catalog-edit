@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@data-catalog/header": "0.0.6",
     "@data-catalog/theme": "0.0.5",
     "@types/node": "^12.7.1",
     "@types/react-helmet": "^5.0.9",

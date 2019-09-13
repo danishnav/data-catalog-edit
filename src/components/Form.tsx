@@ -25,6 +25,7 @@ import Codelist from "../mockCodelist";
 type FormProps = {
     formInitialValues: MyFormValues;
     submit: Function;
+    isEdit?: boolean;
 };
 
 interface MyFormValues {
@@ -250,7 +251,6 @@ const DatasetForm = ({ formInitialValues, submit }: FormProps) => {
                             />
                         </FlexGridItem>
 
-
                         <FlexGridItem marginTop="1rem">
                             <Field
                                 name="description"
@@ -258,6 +258,7 @@ const DatasetForm = ({ formInitialValues, submit }: FormProps) => {
                                     <FormControl label="Description">
                                         <Textarea
                                             {...field}
+                                            placeholder="Legg inn beskrivelse av datasettet"
                                             size={SIZE.compact}
                                         />
                                     </FormControl>
@@ -267,16 +268,15 @@ const DatasetForm = ({ formInitialValues, submit }: FormProps) => {
 
                     </FlexGrid>
                     
-                    <Block paddingTop="1rem"><hr/></Block>
 
                     <Block marginTop="2rem" width="100%">
                         <Button
                             type="submit"
-                            kind={ButtonKind.secondary}
                             overrides={{
                                 BaseButton: {
                                     style: ({ $theme }) => {
                                         return {
+                                            backgroundColor: $theme.colors.primary400,
                                             alignContent: 'center',
                                             paddingRight: '3rem',
                                             paddingLeft: '3rem'
@@ -285,7 +285,7 @@ const DatasetForm = ({ formInitialValues, submit }: FormProps) => {
                                 }
                             }}
                         >
-                            Lagre
+                            Opprett
                         </Button>
                     </Block>
                 </Form>
