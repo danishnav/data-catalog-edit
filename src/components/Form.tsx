@@ -266,7 +266,8 @@ const DatasetForm = ({ formInitialValues, submit }: FormProps) => {
                         </FlexGridItem>
 
                     </FlexGrid>
-
+                    
+                    <Block paddingTop="1rem"><hr/></Block>
 
                     <Block marginTop="2rem" width="100%">
                         <Button
