@@ -15,7 +15,7 @@ class Main extends React.Component {
         return (
             <React.Fragment>
                 <ThemeProvider>
-                    <Block padding="3rem 10rem" height="100%">
+                    <Block margin="0 auto" width="80%" height="100%">
                         <Router history={history}>
                             <Routes />
                         </Router>

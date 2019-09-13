@@ -9,18 +9,20 @@ const server = process.env.REACT_APP_BACKEND_ENDPOINT;
 let initialFormValues = {
     title: "",
     contentType: "",
+    pi: "",
     spatial: "",
     publisher: "",
     description: "",
     categories: [],
     provenances: [],
-    keywords: []
+    keywords: [],
 };
 
 const CreatePage = (props: any) => {
-    // const handleSubmit = () => {
-    //     axios.post(`${server}`, body).then(res => console.log(res));
-    // };
+    const handleSubmit = (body: object) => {
+        axios.post(`${server}`, body).then(res => console.log(res));
+        console.log('submitted', body)
+    };
 
     return (
         <React.Fragment>
@@ -28,7 +30,7 @@ const CreatePage = (props: any) => {
                 <Block alignItems="center" width="100%">
                     <h1>Opprett nytt Datasett</h1>
                 </Block>
-                <DatasetForm formInitialValues={initialFormValues} />
+                <DatasetForm formInitialValues={initialFormValues} submit={handleSubmit}/>
             </Block>
         </React.Fragment>
     );

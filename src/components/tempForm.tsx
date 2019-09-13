@@ -82,7 +82,7 @@ const DatasetForm: React.FC<{}> = () => {
                 render={(formikBag: FormikProps<MyFormValues>) => (
                     <Form>
                         <FlexGrid
-                            flexGridColumnCount={4}
+                            flexGridColumnCount={3}
                             flexGridColumnGap="scale1200"
                             flexGridRowGap="scale1000"
                         >
