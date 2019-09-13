@@ -1,11 +1,9 @@
 import * as React from "react";
-
 import { Block } from "baseui/block";
-import DatasetForm from "../components/Form";
 import axios from "axios";
-import { Card } from 'baseui/card';
-import { Button, SHAPE, KIND as ButtonKind } from "baseui/button";
-import { Paragraph2 } from 'baseui/typography';
+import { Card } from "baseui/card";
+import { Paragraph2 } from "baseui/typography";
+import DatasetForm from "../components/Form";
 
 const server = process.env.REACT_APP_BACKEND_ENDPOINT;
 
@@ -28,7 +26,7 @@ function renderSuccessMessage(message: any | object) {
                 <Paragraph2>{message}</Paragraph2>
             </Card>
         </Block>
-    )
+    );
 }
 
 const CreatePage = (props: any) => {
@@ -38,16 +36,16 @@ const CreatePage = (props: any) => {
         let body = [values];
         //axios.post(`${server}`, body).then(res => console.log(res));
         console.log("submitted", body);
-        setCreated(true)
+        setCreated(true);
     };
 
     return (
         <React.Fragment>
             <Block>
                 <h1>Datasett</h1>
-                {isCreated ?
-                    renderSuccessMessage('Datasettet er nå opprettet.')
-                : null}
+                {isCreated
+                    ? renderSuccessMessage("Datasettet er nå opprettet.")
+                    : null}
 
                 <DatasetForm
                     formInitialValues={initialFormValues}

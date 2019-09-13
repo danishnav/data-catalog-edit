@@ -1,11 +1,8 @@
 import * as React from "react";
-import { Client as Styletron } from "styletron-engine-atomic";
-import { Provider as StyletronProvider } from "styletron-react";
-import { LightTheme, BaseProvider, styled } from "baseui";
 import { Block } from "baseui/block";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "@data-catalog/theme";
-import { Header } from "@data-catalog/header"
+import { Header } from "@data-catalog/header";
 
 import Routes from "./routes";
 
@@ -17,7 +14,12 @@ class Main extends React.Component {
             <React.Fragment>
                 <ThemeProvider>
                     <Header />
-                    <Block margin="0 auto" paddingTop="1rem" width="80%" height="100%">
+                    <Block
+                        margin="0 auto"
+                        paddingTop="1rem"
+                        width="80%"
+                        height="100%"
+                    >
                         <Router history={history}>
                             <Routes />
                         </Router>

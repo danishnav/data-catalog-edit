@@ -8,7 +8,7 @@ const Routes = (): JSX.Element => (
     <Root>
         <Switch>
             <Route exact path="/create" component={CreatePage} />
-            <Route exact path="/edit" component={EditPage} />
+            <Route exact path="/edit/:id" component={EditPage} />
             <Route exact path="/" component={CreatePage} />
         </Switch>
     </Root>
