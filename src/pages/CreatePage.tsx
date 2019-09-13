@@ -15,13 +15,14 @@ let initialFormValues = {
     description: "",
     categories: [],
     provenances: [],
-    keywords: [],
+    keywords: []
 };
 
 const CreatePage = (props: any) => {
-    const handleSubmit = (body: object) => {
+    const handleSubmit = (values: object) => {
+        let body = [values];
         axios.post(`${server}`, body).then(res => console.log(res));
-        console.log('submitted', body)
+        console.log("submitted", body);
     };
 
     return (
@@ -30,7 +31,10 @@ const CreatePage = (props: any) => {
                 <Block alignItems="center" width="100%">
                     <h1>Opprett nytt Datasett</h1>
                 </Block>
-                <DatasetForm formInitialValues={initialFormValues} submit={handleSubmit}/>
+                <DatasetForm
+                    formInitialValues={initialFormValues}
+                    submit={handleSubmit}
+                />
             </Block>
         </React.Fragment>
     );
