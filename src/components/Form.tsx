@@ -95,7 +95,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                     actions: FormikActions<DatasetFormValues>
                 ) => {
                     submit(values);
-                    alert(JSON.stringify(values.policies, null, 2));
+                    alert(JSON.stringify(values, null, 2));
                     actions.setSubmitting(false);
                 }}
                 render={(formikBag: FormikProps<DatasetFormValues>) => (

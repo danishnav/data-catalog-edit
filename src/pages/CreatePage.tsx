@@ -5,9 +5,9 @@ import { Card } from "baseui/card";
 import { Paragraph2 } from "baseui/typography";
 
 import DatasetForm from "../components/Form";
-import MockDataset from './mockDataset'
+import MockDataset from "./mockDataset";
 
-const server = process.env.REACT_APP_BACKEND_ENDPOINT;
+const serverBackend = process.env.REACT_APP_BACKEND_ENDPOINT;
 
 let initialFormValues = {
     title: "",
@@ -30,22 +30,17 @@ function renderSuccessMessage(message: any | object) {
         </Block>
     );
 }
-    
-
 
 const CreatePage = () => {
     const [isCreated, setCreated] = React.useState<boolean>(false);
 
-    //let initialFormValues = parseValuesForForm(MockDataset)
-
+    //TODO - sette opp error handling
     const handleSubmit = (values: object) => {
         let body = [values];
-        //axios.post(`${server}`, body).then(res => console.log(res));
-        console.log("submitted", body);
+        console.log(body, "submittes")
+        //axios.post(`${serverBackend}`, body).then(res => console.log(res));
         setCreated(true);
     };
-
-    const tempSubmit = () => console.log('subnitt')
 
     return (
         <React.Fragment>
@@ -55,7 +50,10 @@ const CreatePage = () => {
                     ? renderSuccessMessage("Datasettet er nå opprettet.")
                     : null}
 
-                <DatasetForm formInitialValues={initialFormValues} submit={handleSubmit} />
+                <DatasetForm
+                    formInitialValues={initialFormValues}
+                    submit={handleSubmit}
+                />
             </Block>
         </React.Fragment>
     );
