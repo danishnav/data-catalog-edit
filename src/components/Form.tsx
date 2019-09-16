@@ -16,24 +16,18 @@ import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { Textarea } from "baseui/textarea";
 import { Button, SHAPE, KIND as ButtonKind } from "baseui/button";
 import { Plus } from "baseui/icon";
-import { Tag, KIND, VARIANT } from "baseui/tag";
+import { Tag, KIND } from "baseui/tag";
 import { Select, TYPE, Value } from "baseui/select";
 import { Label1 } from "baseui/typography";
 
-import { DatasetFormValues } from '../constants'
+import { DatasetFormValues } from "../constants";
 import Codelist from "../mockCodelist";
-import PolicyForm from "./PolicyForm";
-import PolicyTable from './PolicyTable'
 
 type FormProps = {
     formInitialValues: DatasetFormValues | any;
     submit: Function;
-    isEdit?: boolean;
 };
 
-const rowBlockProps: BlockProps = {
-    display: "flex"
-};
 const itemProps: BlockProps = {
     overrides: {
         Block: {
@@ -45,40 +39,50 @@ const itemProps: BlockProps = {
     }
 };
 
-function renderTagList(list: any[] | null, arrayHelpers: FieldArrayRenderProps) {
+function renderTagList(
+    list: any[] | null,
+    arrayHelpers: FieldArrayRenderProps
+) {
     return (
         <React.Fragment>
             {list && list.length > 0
                 ? list.map((item, index) => (
-                    <React.Fragment>
-                        {item ? (
-                            <Tag
-                                key={item}
-                                kind={KIND.primary}
-                                onActionClick={() => arrayHelpers.remove(index)}
-                            >
-                                {item}
-                            </Tag>
-                        ) : null}
-                    </React.Fragment>
-                ))
+                      <React.Fragment key={index}>
+                          {item ? (
+                              <Tag
+                                  key={index}
+                                  kind={KIND.primary}
+                                  onActionClick={() =>
+                                      arrayHelpers.remove(index)
+                                  }
+                              >
+                                  {item}
+                              </Tag>
+                          ) : null}
+                      </React.Fragment>
+                  ))
                 : null}
         </React.Fragment>
     );
 }
 
-const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
-    const [value, setValue] = React.useState<Value>([]);
-    const [currentProvenanceValue, setCurrentProvenanceValue] = React.useState([]);
+const DatasetForm = ({ formInitialValues, submit }: FormProps) => {
+    const [value] = React.useState<Value>([]);
+    const [currentProvenanceValue] = React.useState([]);
     const [currentKeywordValue, setCurrentKeywordValue] = React.useState("");
 
-
-    const getParsedOptions = (codelist: object | undefined, provenances: any | undefined) => {
+    const getParsedOptions = (
+        codelist: object | undefined,
+        provenances: any | undefined
+    ) => {
         if (!codelist) return [];
 
-        let parsedOptions = Object.keys(codelist).reduce((acc: any, curr: any) => {
-            return [...acc, { id: curr }];
-        }, [])
+        let parsedOptions = Object.keys(codelist).reduce(
+            (acc: any, curr: any) => {
+                return [...acc, { id: curr }];
+            },
+            []
+        );
 
         return parsedOptions.filter(option =>
             provenances.includes(option.id) ? null : option.id
@@ -94,7 +98,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                     actions: FormikActions<DatasetFormValues>
                 ) => {
                     submit(values);
-                    alert(JSON.stringify(values.policies, null, 2));
+                    //alert(JSON.stringify(values.policies, null, 2));
                     actions.setSubmitting(false);
                 }}
                 render={(formikBag: FormikProps<DatasetFormValues>) => (
@@ -111,10 +115,10 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                         field,
                                         form
                                     }: FieldProps<DatasetFormValues>) => (
-                                            <FormControl label="Title">
-                                                <Input {...field} size="compact" />
-                                            </FormControl>
-                                        )}
+                                        <FormControl label="Title">
+                                            <Input {...field} size="compact" />
+                                        </FormControl>
+                                    )}
                                 />
                             </FlexGridItem>
                             <FlexGridItem>
@@ -124,10 +128,10 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                         field,
                                         form
                                     }: FieldProps<DatasetFormValues>) => (
-                                            <FormControl label="Type">
-                                                <Input {...field} size="compact" />
-                                            </FormControl>
-                                        )}
+                                        <FormControl label="Type">
+                                            <Input {...field} size="compact" />
+                                        </FormControl>
+                                    )}
                                 />
                             </FlexGridItem>
                             <FlexGridItem>
@@ -137,10 +141,10 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                         field,
                                         form
                                     }: FieldProps<DatasetFormValues>) => (
-                                            <FormControl label="PI">
-                                                <Input {...field} size="compact" />
-                                            </FormControl>
-                                        )}
+                                        <FormControl label="PI">
+                                            <Input {...field} size="compact" />
+                                        </FormControl>
+                                    )}
                                 />
                             </FlexGridItem>
 
@@ -156,19 +160,29 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                 <Select
                                                     options={getParsedOptions(
                                                         Codelist.CATEGORY,
-                                                        formikBag.values.categories
+                                                        formikBag.values
+                                                            .categories
                                                     )}
                                                     type={TYPE.search}
                                                     labelKey="id"
                                                     valueKey="id"
                                                     openOnClick={false}
                                                     maxDropdownHeight="300px"
-                                                    onChange={({ option }) => {arrayHelpers.push(option ? option.id : null);}}
+                                                    onChange={({ option }) => {
+                                                        arrayHelpers.push(
+                                                            option
+                                                                ? option.id
+                                                                : null
+                                                        );
+                                                    }}
                                                     value={value}
                                                     size="compact"
                                                 />
                                             </Block>
-                                            {renderTagList(formikBag.values.categories, arrayHelpers)}
+                                            {renderTagList(
+                                                formikBag.values.categories,
+                                                arrayHelpers
+                                            )}
                                         </Block>
                                     )}
                                 />
@@ -186,7 +200,8 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                 <Select
                                                     options={getParsedOptions(
                                                         Codelist.PROVENANCE,
-                                                        formikBag.values.provenances
+                                                        formikBag.values
+                                                            .provenances
                                                     )}
                                                     type={TYPE.search}
                                                     labelKey="id"
@@ -200,11 +215,16 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                                 : null
                                                         );
                                                     }}
-                                                    value={currentProvenanceValue}
+                                                    value={
+                                                        currentProvenanceValue
+                                                    }
                                                     size="compact"
                                                 />
                                             </Block>
-                                            {renderTagList(formikBag.values.provenances, arrayHelpers)}
+                                            {renderTagList(
+                                                formikBag.values.provenances,
+                                                arrayHelpers
+                                            )}
                                         </Block>
                                     )}
                                 />
@@ -215,29 +235,44 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                     name="keywords"
                                     render={arrayHelpers => (
                                         <Block>
-                                            <Label1 marginBottom="8px">Keywords</Label1>
+                                            <Label1 marginBottom="8px">
+                                                Keywords
+                                            </Label1>
                                             <Input
                                                 type="text"
                                                 placeholder="Legg til nøkkelord"
                                                 value={currentKeywordValue}
-                                                onChange={event => setCurrentKeywordValue(event.currentTarget.value)}
+                                                onChange={event =>
+                                                    setCurrentKeywordValue(
+                                                        event.currentTarget
+                                                            .value
+                                                    )
+                                                }
                                                 size="compact"
                                                 overrides={{
                                                     After: () => (
                                                         <Button
                                                             type="button"
                                                             shape={SHAPE.square}
-                                                            kind={ButtonKind.primary}
+                                                            kind={
+                                                                ButtonKind.primary
+                                                            }
                                                             size="compact"
                                                             onClick={() =>
-                                                                arrayHelpers.push(currentKeywordValue)}
+                                                                arrayHelpers.push(
+                                                                    currentKeywordValue
+                                                                )
+                                                            }
                                                         >
                                                             <Plus />
                                                         </Button>
                                                     )
                                                 }}
                                             />
-                                            {renderTagList(formikBag.values.keywords, arrayHelpers)}
+                                            {renderTagList(
+                                                formikBag.values.keywords,
+                                                arrayHelpers
+                                            )}
                                         </Block>
                                     )}
                                 />
@@ -246,9 +281,14 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                             <FlexGridItem {...itemProps}>
                                 <Field
                                     name="description"
-                                    render={({ field, form }: FieldProps<DatasetFormValues>) => (
+                                    render={({
+                                        field,
+                                        form
+                                    }: FieldProps<DatasetFormValues>) => (
                                         <Block>
-                                            <Label1 marginBottom="8px">Beskrivelse</Label1>
+                                            <Label1 marginBottom="8px">
+                                                Beskrivelse
+                                            </Label1>
                                             <Textarea
                                                 {...field}
                                                 placeholder="Legg inn beskrivelse av datasettet"
@@ -256,48 +296,9 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                 rows={5}
                                             />
                                         </Block>
-
                                     )}
                                 />
                             </FlexGridItem>
-
-
-                            {isEdit ? (
-                                <React.Fragment>
-                                    <FlexGridItem display="none" />
-
-                                    <FlexGridItem marginTop="20px">
-                                        <FieldArray
-                                            name="policies"
-                                            render={arrayHelpers => (
-                                                <Block>
-                                                    <Block display="flex" justifyContent="space-between" marginBottom="8px">
-                                                        <Label1 >Behandlingsgrunnlag</Label1>
-                                                        <Button
-                                                            type="button"
-                                                            size={SIZE.compact}
-                                                            onClick={() => arrayHelpers.push(currentKeywordValue)}
-                                                        >
-                                                            Legg til ny 
-                                                        </Button>
-                                                    </Block>
-
-                                                    <PolicyTable
-                                                        policies={formikBag.values.policies}
-                                                        selectOptions={getParsedOptions(Codelist.PURPOSE, formikBag.values.policies,)}
-                                                        onRemovePolicy={(index: any) => arrayHelpers.remove(index)}
-                                                        onAdd={() => arrayHelpers.push({ purposeCode: '', legalBasisDescription: '' })}
-                                                    />
-                                                </Block>
-                                            )}
-                                        />
-
-                                    </FlexGridItem>
-
-                                    <FlexGridItem display="none" />
-                                </React.Fragment>
-
-                            ) : null}
                         </FlexGrid>
 
                         <Block marginTop="2rem" width="100%">
@@ -307,7 +308,8 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                     BaseButton: {
                                         style: ({ $theme }) => {
                                             return {
-                                                backgroundColor: $theme.colors.primary400,
+                                                backgroundColor:
+                                                    $theme.colors.primary400,
                                                 alignContent: "center",
                                                 paddingRight: "3rem",
                                                 paddingLeft: "3rem"

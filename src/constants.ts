@@ -11,6 +11,4 @@ export interface DatasetFormValues {
     categories: string[] | null[] | null;
     provenances: string[] | null[] | null;
     keywords: string[] | null[] | null;
-    policies?: any | undefined;
 }
-
