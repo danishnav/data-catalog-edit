@@ -20,62 +20,48 @@ import { Tag, KIND, VARIANT } from "baseui/tag";
 import { Select, TYPE, Value } from "baseui/select";
 import { Label1 } from "baseui/typography";
 
+import { DatasetFormValues } from '../constants'
 import Codelist from "../mockCodelist";
 import PolicyForm from "./PolicyForm";
+import PolicyTable from './PolicyTable'
 
 type FormProps = {
-    formInitialValues: MyFormValues;
+    formInitialValues: DatasetFormValues | any;
     submit: Function;
     isEdit?: boolean;
 };
 
-interface MyFormValues {
-    title: string;
-    contentType: string;
-    pi: string;
-    spatial: string;
-    publisher: string;
-    description: string;
-    categories: Array<string>;
-    provenances: Array<string>;
-    keywords: Array<string>;
-}
-
+const rowBlockProps: BlockProps = {
+    display: "flex"
+};
 const itemProps: BlockProps = {
     overrides: {
         Block: {
             style: ({ $theme }) => ({
-                width: `calc((200% - ${$theme.sizing.scale800}) / 3)`,
+                width: `calc((100% - ${$theme.sizing.scale800}) / 3)`,
                 marginBottom: "2rem"
             })
         }
     }
 };
 
-const rowBlockProps: BlockProps = {
-    display: "flex"
-};
-
-const tagListProps: BlockProps = {
-    alignSelf: "flex-end",
-    width: "auto",
-    marginLeft: "2rem"
-};
-
-function renderTagList(list: any[], arrayHelpers: FieldArrayRenderProps) {
+function renderTagList(list: any[] | null, arrayHelpers: FieldArrayRenderProps) {
     return (
         <React.Fragment>
             {list && list.length > 0
                 ? list.map((item, index) => (
-                      <Tag
-                          key={item}
-                          variant={VARIANT.outlined}
-                          kind={KIND.positive}
-                          onActionClick={() => arrayHelpers.remove(index)}
-                      >
-                          {item}
-                      </Tag>
-                  ))
+                    <React.Fragment>
+                        {item ? (
+                            <Tag
+                                key={item}
+                                kind={KIND.primary}
+                                onActionClick={() => arrayHelpers.remove(index)}
+                            >
+                                {item}
+                            </Tag>
+                        ) : null}
+                    </React.Fragment>
+                ))
                 : null}
         </React.Fragment>
     );
@@ -83,23 +69,16 @@ function renderTagList(list: any[], arrayHelpers: FieldArrayRenderProps) {
 
 const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
     const [value, setValue] = React.useState<Value>([]);
+    const [currentProvenanceValue, setCurrentProvenanceValue] = React.useState([]);
     const [currentKeywordValue, setCurrentKeywordValue] = React.useState("");
-    const [currentProvenanceValue, setCurrentProvenanceValue] = React.useState(
-        ""
-    );
 
-    const getParsedOptions = (
-        codelist: object | undefined,
-        provenances: any | undefined
-    ) => {
+
+    const getParsedOptions = (codelist: object | undefined, provenances: any | undefined) => {
         if (!codelist) return [];
 
-        let parsedOptions = Object.keys(codelist).reduce(
-            (acc: any, curr: any) => {
-                return [...acc, { id: curr }];
-            },
-            []
-        );
+        let parsedOptions = Object.keys(codelist).reduce((acc: any, curr: any) => {
+            return [...acc, { id: curr }];
+        }, [])
 
         return parsedOptions.filter(option =>
             provenances.includes(option.id) ? null : option.id
@@ -111,14 +90,14 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
             <Formik
                 initialValues={formInitialValues}
                 onSubmit={(
-                    values: MyFormValues,
-                    actions: FormikActions<MyFormValues>
+                    values: DatasetFormValues,
+                    actions: FormikActions<DatasetFormValues>
                 ) => {
                     submit(values);
-                    alert(JSON.stringify(values, null, 2));
+                    alert(JSON.stringify(values.policies, null, 2));
                     actions.setSubmitting(false);
                 }}
-                render={(formikBag: FormikProps<MyFormValues>) => (
+                render={(formikBag: FormikProps<DatasetFormValues>) => (
                     <Form>
                         <FlexGrid
                             flexGridColumnCount={3}
@@ -131,39 +110,37 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                     render={({
                                         field,
                                         form
-                                    }: FieldProps<MyFormValues>) => (
-                                        <FormControl label="Title">
-                                            <Input {...field} size="compact" />
-                                        </FormControl>
-                                    )}
+                                    }: FieldProps<DatasetFormValues>) => (
+                                            <FormControl label="Title">
+                                                <Input {...field} size="compact" />
+                                            </FormControl>
+                                        )}
                                 />
                             </FlexGridItem>
-
                             <FlexGridItem>
                                 <Field
                                     name="contentType"
                                     render={({
                                         field,
                                         form
-                                    }: FieldProps<MyFormValues>) => (
-                                        <FormControl label="Type">
-                                            <Input {...field} size="compact" />
-                                        </FormControl>
-                                    )}
+                                    }: FieldProps<DatasetFormValues>) => (
+                                            <FormControl label="Type">
+                                                <Input {...field} size="compact" />
+                                            </FormControl>
+                                        )}
                                 />
                             </FlexGridItem>
-
                             <FlexGridItem>
                                 <Field
                                     name="pi"
                                     render={({
                                         field,
                                         form
-                                    }: FieldProps<MyFormValues>) => (
-                                        <FormControl label="PI">
-                                            <Input {...field} size="compact" />
-                                        </FormControl>
-                                    )}
+                                    }: FieldProps<DatasetFormValues>) => (
+                                            <FormControl label="PI">
+                                                <Input {...field} size="compact" />
+                                            </FormControl>
+                                        )}
                                 />
                             </FlexGridItem>
 
@@ -171,20 +148,51 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                 <FieldArray
                                     name="categories"
                                     render={arrayHelpers => (
-                                        <Block {...rowBlockProps}>
-                                            <Block width="50%">
+                                        <Block>
+                                            <Block>
                                                 <Label1 marginBottom="8px">
                                                     Categories
                                                 </Label1>
                                                 <Select
                                                     options={getParsedOptions(
                                                         Codelist.CATEGORY,
-                                                        formikBag.values
-                                                            .categories
+                                                        formikBag.values.categories
                                                     )}
                                                     type={TYPE.search}
                                                     labelKey="id"
                                                     valueKey="id"
+                                                    openOnClick={false}
+                                                    maxDropdownHeight="300px"
+                                                    onChange={({ option }) => {arrayHelpers.push(option ? option.id : null);}}
+                                                    value={value}
+                                                    size="compact"
+                                                />
+                                            </Block>
+                                            {renderTagList(formikBag.values.categories, arrayHelpers)}
+                                        </Block>
+                                    )}
+                                />
+                            </FlexGridItem>
+                            <FlexGridItem display="none" />
+                            <FlexGridItem {...itemProps}>
+                                <FieldArray
+                                    name="provenances"
+                                    render={arrayHelpers => (
+                                        <Block>
+                                            <Block>
+                                                <Label1 marginBottom="8px">
+                                                    Provenances
+                                                </Label1>
+                                                <Select
+                                                    options={getParsedOptions(
+                                                        Codelist.PROVENANCE,
+                                                        formikBag.values.provenances
+                                                    )}
+                                                    type={TYPE.search}
+                                                    labelKey="id"
+                                                    valueKey="id"
+                                                    openOnClick={false}
+                                                    maxDropdownHeight="300px"
                                                     onChange={({ option }) => {
                                                         arrayHelpers.push(
                                                             option
@@ -192,172 +200,103 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                                 : null
                                                         );
                                                     }}
-                                                    value={value}
+                                                    value={currentProvenanceValue}
                                                     size="compact"
                                                 />
                                             </Block>
-                                            <Block {...tagListProps}>
-                                                {renderTagList(
-                                                    formikBag.values.categories,
-                                                    arrayHelpers
-                                                )}
-                                            </Block>
+                                            {renderTagList(formikBag.values.provenances, arrayHelpers)}
                                         </Block>
                                     )}
                                 />
                             </FlexGridItem>
-                            <FlexGrid display="none"></FlexGrid>
-                            <FlexGrid display="none"></FlexGrid>
-
-                            <FlexGridItem {...itemProps}>
-                                <FieldArray
-                                    name="provenances"
-                                    render={arrayHelpers => (
-                                        <Block {...rowBlockProps}>
-                                            <Block width="50%">
-                                                <Label1 marginBottom="8px">
-                                                    Provenances
-                                                </Label1>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Legg til provenance"
-                                                    value={
-                                                        currentProvenanceValue
-                                                    }
-                                                    onChange={event =>
-                                                        setCurrentProvenanceValue(
-                                                            event.currentTarget
-                                                                .value
-                                                        )
-                                                    }
-                                                    size="compact"
-                                                    overrides={{
-                                                        After: () => (
-                                                            <Button
-                                                                type="button"
-                                                                shape={
-                                                                    SHAPE.square
-                                                                }
-                                                                kind={
-                                                                    ButtonKind.primary
-                                                                }
-                                                                size="compact"
-                                                                onClick={() =>
-                                                                    arrayHelpers.push(
-                                                                        currentProvenanceValue
-                                                                    )
-                                                                }
-                                                            >
-                                                                <Plus />
-                                                            </Button>
-                                                        )
-                                                    }}
-                                                />
-                                            </Block>
-                                            <Block {...tagListProps}>
-                                                {renderTagList(
-                                                    formikBag.values
-                                                        .provenances,
-                                                    arrayHelpers
-                                                )}
-                                            </Block>
-                                        </Block>
-                                    )}
-                                />
-                            </FlexGridItem>
-                            <FlexGrid display="none"></FlexGrid>
-                            <FlexGrid display="none"></FlexGrid>
 
                             <FlexGridItem {...itemProps}>
                                 <FieldArray
                                     name="keywords"
                                     render={arrayHelpers => (
-                                        <Block {...rowBlockProps}>
-                                            <Block width="50%">
-                                                <Label1 marginBottom="8px">
-                                                    Keywords
-                                                </Label1>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Legg til nøkkelord"
-                                                    value={currentKeywordValue}
-                                                    onChange={event =>
-                                                        setCurrentKeywordValue(
-                                                            event.currentTarget
-                                                                .value
-                                                        )
-                                                    }
-                                                    size="compact"
-                                                    overrides={{
-                                                        After: () => (
-                                                            <Button
-                                                                type="button"
-                                                                shape={
-                                                                    SHAPE.square
-                                                                }
-                                                                kind={
-                                                                    ButtonKind.primary
-                                                                }
-                                                                size="compact"
-                                                                onClick={() =>
-                                                                    arrayHelpers.push(
-                                                                        currentKeywordValue
-                                                                    )
-                                                                }
-                                                            >
-                                                                <Plus />
-                                                            </Button>
-                                                        )
-                                                    }}
-                                                />
-                                            </Block>
-                                            <Block {...tagListProps}>
-                                                {renderTagList(
-                                                    formikBag.values.keywords,
-                                                    arrayHelpers
-                                                )}
-                                            </Block>
+                                        <Block>
+                                            <Label1 marginBottom="8px">Keywords</Label1>
+                                            <Input
+                                                type="text"
+                                                placeholder="Legg til nøkkelord"
+                                                value={currentKeywordValue}
+                                                onChange={event => setCurrentKeywordValue(event.currentTarget.value)}
+                                                size="compact"
+                                                overrides={{
+                                                    After: () => (
+                                                        <Button
+                                                            type="button"
+                                                            shape={SHAPE.square}
+                                                            kind={ButtonKind.primary}
+                                                            size="compact"
+                                                            onClick={() =>
+                                                                arrayHelpers.push(currentKeywordValue)}
+                                                        >
+                                                            <Plus />
+                                                        </Button>
+                                                    )
+                                                }}
+                                            />
+                                            {renderTagList(formikBag.values.keywords, arrayHelpers)}
                                         </Block>
                                     )}
                                 />
                             </FlexGridItem>
-
-                            <FlexGridItem marginTop="1rem">
+                            <FlexGridItem display="none" />
+                            <FlexGridItem {...itemProps}>
                                 <Field
                                     name="description"
-                                    render={({
-                                        field,
-                                        form
-                                    }: FieldProps<MyFormValues>) => (
-                                        <FormControl label="Description">
+                                    render={({ field, form }: FieldProps<DatasetFormValues>) => (
+                                        <Block>
+                                            <Label1 marginBottom="8px">Beskrivelse</Label1>
                                             <Textarea
                                                 {...field}
                                                 placeholder="Legg inn beskrivelse av datasettet"
                                                 size={SIZE.compact}
+                                                rows={5}
                                             />
-                                        </FormControl>
+                                        </Block>
+
                                     )}
                                 />
                             </FlexGridItem>
 
+
                             {isEdit ? (
-                                <FlexGridItem marginTop="1rem">
-                                    <Field
-                                        name="description"
-                                        render={({
-                                            field,
-                                            form
-                                        }: FieldProps<MyFormValues>) => (
-                                            <FormControl label="Description">
-                                                <Textarea
-                                                    {...field}
-                                                    placeholder="Legg inn beskrivelse av datasettet"
-                                                    size={SIZE.compact}
-                                                />
-                                            </FormControl>
-                                        )}
-                                    />
-                                </FlexGridItem>
+                                <React.Fragment>
+                                    <FlexGridItem display="none" />
+
+                                    <FlexGridItem marginTop="20px">
+                                        <FieldArray
+                                            name="policies"
+                                            render={arrayHelpers => (
+                                                <Block>
+                                                    <Block display="flex" justifyContent="space-between" marginBottom="8px">
+                                                        <Label1 >Behandlingsgrunnlag</Label1>
+                                                        <Button
+                                                            type="button"
+                                                            size={SIZE.compact}
+                                                            onClick={() => arrayHelpers.push(currentKeywordValue)}
+                                                        >
+                                                            Legg til ny 
+                                                        </Button>
+                                                    </Block>
+
+                                                    <PolicyTable
+                                                        policies={formikBag.values.policies}
+                                                        selectOptions={getParsedOptions(Codelist.PURPOSE, formikBag.values.policies,)}
+                                                        onRemovePolicy={(index: any) => arrayHelpers.remove(index)}
+                                                        onAdd={() => arrayHelpers.push({ purposeCode: '', legalBasisDescription: '' })}
+                                                    />
+                                                </Block>
+                                            )}
+                                        />
+
+                                    </FlexGridItem>
+
+                                    <FlexGridItem display="none" />
+                                </React.Fragment>
+
                             ) : null}
                         </FlexGrid>
 
@@ -368,8 +307,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                     BaseButton: {
                                         style: ({ $theme }) => {
                                             return {
-                                                backgroundColor:
-                                                    $theme.colors.primary400,
+                                                backgroundColor: $theme.colors.primary400,
                                                 alignContent: "center",
                                                 paddingRight: "3rem",
                                                 paddingLeft: "3rem"
@@ -384,8 +322,6 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                     </Form>
                 )}
             />
-
-            {isEdit ? <PolicyForm /> : null}
         </React.Fragment>
     );
 };

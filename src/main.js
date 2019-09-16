@@ -16,7 +16,6 @@ class Main extends React.Component {
                     <Header />
                     <Block
                         margin="0 auto"
-                        paddingTop="1rem"
                         width="80%"
                         height="100%"
                     >
