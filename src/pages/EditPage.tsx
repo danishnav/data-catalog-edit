@@ -3,7 +3,8 @@ import axios from "axios";
 import DatasetForm from "../components/Form";
 import { Spinner } from "baseui/spinner";
 import { Block } from "baseui/block";
-import MockDataset from './mockDataset'
+import DatasetMock from '../mock/datasetMock'
+import PolicyMock from '../mock/policyMock'
 
 const server = process.env.REACT_APP_BACKEND_ENDPOINT;
 
@@ -29,18 +30,20 @@ const reduceList = (list: any) => {
 
 const reducePolicies = (list: any) => {
     if(!list) return
-    console.log(list, 'pars')
+
     let parsed = list.reduce((acc: any, curr: any) => {
         return [...acc, {
+            datasetTitle: curr.dataset.title,
+            id: curr.policyId,
             purposeCode: curr.purpose.code,
             legalBasisDescription: curr.legalBasisDescription
         }]
     }, [])
-    console.log(parsed, "PARSED")
+    console.log(parsed, 'parsedList')
     return parsed
 }
 
-const parseValuesForForm = (data: any) => {
+const parseValuesForForm = (data: any, policies: any) => {
     if (!data) return null
 
     return {
@@ -51,15 +54,14 @@ const parseValuesForForm = (data: any) => {
         provenances: reduceList(data.provenances),
         keywords: data.keywords,
         description: data.description,
-        policies: reducePolicies(data.policies)
+        policies: reducePolicies(policies)
     }
 }
 
-let initialFormValues = parseValuesForForm(MockDataset)
 
 
 const EditPage = (props: any) => {
-    const [data, setData] = React.useState(parseValuesForForm(MockDataset));
+    const [data, setData] = React.useState(parseValuesForForm(DatasetMock, PolicyMock));
     const [error, setError] = React.useState(null);
     const [isLoading, setLoading] = React.useState(false);
 
@@ -85,8 +87,8 @@ const EditPage = (props: any) => {
         }
     };
 
-    const handleSubmit = () => {
-        console.log("submitted");
+    const handleSubmit = (values: any) => {
+        console.log("submitted", values);
     };
 
     // React.useEffect(() => {
@@ -102,7 +104,7 @@ const EditPage = (props: any) => {
             {isLoading ? (
                 <Spinner size={30} />
             ) : (
-                <DatasetForm formInitialValues={initialFormValues} isEdit={true} submit={handleSubmit}/>
+                <DatasetForm formInitialValues={data} isEdit={true} submit={handleSubmit} />
             )}
         </React.Fragment>
     );

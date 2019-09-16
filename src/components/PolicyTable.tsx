@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {withStyle, useStyletron} from 'baseui';
+import { withStyle, useStyletron } from 'baseui';
 import {
     StyledTable,
     StyledHead,
@@ -16,6 +16,21 @@ import { Input, SIZE } from "baseui/input";
 import { Delete } from "baseui/icon";
 import { Button, KIND as BUTTONKIND } from 'baseui/button';
 import { KIND } from 'baseui/tag';
+import { NONAME } from 'dns';
+
+const StyledBodyCell = withStyle(StyledCell, {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+    paddingBottom: '1rem',
+    borderBottom: '2px solid #E9E7E7'
+  })
+
+  const StyledBodyRow = withStyle(StyledCell, {
+    backgroundColor: 'transparent',
+    borderBottom: '1px solid #E9E7E7',
+    display: 'flex',
+    alignItems: 'center'
+  })
 
 let DATA = [
     ['Marlyn', 10],
@@ -42,15 +57,12 @@ let DATA = [
 
 type TableProps = {
     policies: any | undefined;
-    onRemovePolicy: Function;
-    onAdd: Function;
-    selectOptions: object | null;
 };
 
-const PolicyTable = ({ policies, onRemovePolicy, onAdd }: TableProps) => {
+const PolicyTable = ({ policies }: TableProps) => {
     const [useCss, theme] = useStyletron();
     return (
-        <StyledTable $gridTemplateColumns="40% 40% 20%">
+        <StyledTable className={useCss({ marginBottom: '2rem', overflow: 'hidden !important' })}>
 
             <StyledHead>
                 <StyledHeadCell>Formål</StyledHeadCell>
@@ -59,50 +71,55 @@ const PolicyTable = ({ policies, onRemovePolicy, onAdd }: TableProps) => {
             </StyledHead>
 
             <StyledBody>
-                {policies ? policies.map((row: any, index: any) => (
-                    <StyledRow key={index}>
-                        <StyledCell>
-                            <Field
-                                name={`policies[${index}].purposeCode`}
-                                render={({field,form}: FieldProps<DatasetFormValues>) => (
-                                    <Input {...field} size="compact" />
-                                )}
-                            />
-                        </StyledCell>
-
-                        <StyledCell>
-                            <Field
-                                name={`policies[${index}].legalBasisDescription`}
-                                render={({
-                                    field, form }: FieldProps<DatasetFormValues>) => (
+                {policies ? policies.map((row: any, index: number) => (
+                    <StyledBodyRow key={index}>
+                            <StyledCell>
+                                {/* <Field
+                                    name={`policies[${index}].purposeCode`}
+                                    render={({ field, form }: FieldProps<DatasetFormValues>) => (
                                         <Input {...field} size="compact" />
                                     )}
-                            />
-                        </StyledCell>
+                                /> */}
 
-                        <StyledCell>
-                            <Block width="100%">
-                                <Button 
-                                    type="button" 
-                                    onClick={() => onRemovePolicy(index)}
-                                    size={SIZE.compact}
-                                    kind={BUTTONKIND.tertiary}
-                                    overrides={{
-                                        BaseButton: {
-                                            style: ({ $theme }) => {
-                                                return {
-                                                    backgroundColor: $theme.colors.warning,
-                                                    color: 'white'
-                                                };
+                                {row.purposeCode}
+                            </StyledCell>
+
+                            <StyledCell>
+                                {/* <Field
+                                    name={`policies[${index}].legalBasisDescription`}
+                                    render={({
+                                        field, form }: FieldProps<DatasetFormValues>) => (
+                                            <Input {...field} size="compact" />
+                                        )}
+                                /> */}
+                                {row.legalBasisDescription}
+
+                            </StyledCell>
+
+                            <StyledCell>
+                                <Block width="100%" display="flex" justifyContent="flex-end">
+                                    <Button
+                                        type="button"
+                                        size={SIZE.compact}
+                                        kind={BUTTONKIND.tertiary}
+                                        overrides={{
+                                            BaseButton: {
+                                                style: ({ $theme }) => {
+                                                    return {
+                                                        backgroundColor: $theme.colors.warning300,
+                                                        color: 'white',
+                                                        height: '2rem'
+                                                    };
+                                                }
                                             }
-                                        }
-                                    }}
-                                >
-                                    <Delete />
-                                </Button>
-                            </Block>
-                        </StyledCell>
-                    </StyledRow>
+                                        }}
+                                    >
+                                        <Delete size={20} />
+                                    </Button>
+                                </Block>
+                            </StyledCell>
+
+                    </StyledBodyRow>
                 )) : null}
             </StyledBody>
         </StyledTable>

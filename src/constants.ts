@@ -1,4 +1,5 @@
 export interface Policy {
+    id?: string | number | null;
     datasetTitle: string;
     legalbasisDescription: string | null;
 }

@@ -22,7 +22,6 @@ import { Label1 } from "baseui/typography";
 
 import { DatasetFormValues } from '../constants'
 import Codelist from "../mockCodelist";
-import PolicyForm from "./PolicyForm";
 import PolicyTable from './PolicyTable'
 
 type FormProps = {
@@ -50,7 +49,7 @@ function renderTagList(list: any[] | null, arrayHelpers: FieldArrayRenderProps) 
         <React.Fragment>
             {list && list.length > 0
                 ? list.map((item, index) => (
-                    <React.Fragment>
+                    <React.Fragment key={index}>
                         {item ? (
                             <Tag
                                 key={item}
@@ -71,6 +70,8 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
     const [value, setValue] = React.useState<Value>([]);
     const [currentProvenanceValue, setCurrentProvenanceValue] = React.useState([]);
     const [currentKeywordValue, setCurrentKeywordValue] = React.useState("");
+    const [currentPurposeValue, setPurposeValue] = React.useState("");
+    const [currentLegalbasisValue, setLegalbasisValue] = React.useState("");
 
 
     const getParsedOptions = (codelist: object | undefined, provenances: any | undefined) => {
@@ -163,7 +164,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                     valueKey="id"
                                                     openOnClick={false}
                                                     maxDropdownHeight="300px"
-                                                    onChange={({ option }) => {arrayHelpers.push(option ? option.id : null);}}
+                                                    onChange={({ option }) => { arrayHelpers.push(option ? option.id : null); }}
                                                     value={value}
                                                     size="compact"
                                                 />
@@ -265,35 +266,62 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                             {isEdit ? (
                                 <React.Fragment>
                                     <FlexGridItem display="none" />
-
                                     <FlexGridItem marginTop="20px">
                                         <FieldArray
                                             name="policies"
                                             render={arrayHelpers => (
-                                                <Block>
-                                                    <Block display="flex" justifyContent="space-between" marginBottom="8px">
-                                                        <Label1 >Behandlingsgrunnlag</Label1>
-                                                        <Button
-                                                            type="button"
-                                                            size={SIZE.compact}
-                                                            onClick={() => arrayHelpers.push(currentKeywordValue)}
-                                                        >
-                                                            Legg til ny 
-                                                        </Button>
+                                                <React.Fragment>
+                                                    <Block marginBottom="1rem">
+                                                        <h2>Behandlingsgrunnlag</h2>
                                                     </Block>
 
-                                                    <PolicyTable
-                                                        policies={formikBag.values.policies}
-                                                        selectOptions={getParsedOptions(Codelist.PURPOSE, formikBag.values.policies,)}
-                                                        onRemovePolicy={(index: any) => arrayHelpers.remove(index)}
-                                                        onAdd={() => arrayHelpers.push({ purposeCode: '', legalBasisDescription: '' })}
-                                                    />
-                                                </Block>
+                                                    <Block display="flex" marginBottom="2rem">
+                                                        <Block width="100%" marginRight="4rem">
+                                                            <Input
+                                                                type="text"
+                                                                placeholder="Legg til formål"
+                                                                value={currentPurposeValue}
+                                                                onChange={event => setPurposeValue(event.currentTarget.value)}
+                                                                size="compact"
+                                                            />
+                                                        </Block>
+                                                        <Block width="100%" marginRight="3rem">
+                                                            <Input
+                                                                type="text"
+                                                                placeholder="Legg til rettslig grunnlag"
+                                                                value={currentLegalbasisValue}
+                                                                onChange={event => setLegalbasisValue(event.currentTarget.value)}
+                                                                size="compact"
+                                                            />
+                                                        </Block>
+                                                        <Block width="100%">
+                                                            <Button
+                                                                type="button"
+                                                                size={SIZE.compact}
+                                                                onClick={() => {   
+                                                                    arrayHelpers.push({
+                                                                        purposeCode: currentPurposeValue,
+                                                                        legalBasisDescription: currentLegalbasisValue
+                                                                    })
+                                                                    setPurposeValue('')
+                                                                    setLegalbasisValue('')
+                                                                }
+                                                                }
+                                                            >
+                                                                Legg til
+                                                            </Button>
+                                                        </Block>
+
+                                                    </Block>
+
+                                                    <Block>
+                                                        <PolicyTable policies={formikBag.values.policies} />
+                                                    </Block>
+
+                                                </React.Fragment>
                                             )}
                                         />
-
                                     </FlexGridItem>
-
                                     <FlexGridItem display="none" />
                                 </React.Fragment>
 
