@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import Root from "./components/Root";
 import CreatePage from "./pages/CreatePage";
 import EditPage from "./pages/EditPage";
-import PolicyTable from './components/PolicyTable'
+import PolicyTable from "./components/Policy";
 
 const Routes = (): JSX.Element => (
     <Root>

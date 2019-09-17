@@ -3,13 +3,10 @@ import axios from "axios";
 import DatasetForm from "../components/Form";
 import { Spinner } from "baseui/spinner";
 import { Block } from "baseui/block";
-
-import Policy from "../components/Policy";
 import DatasetMock from "../mock/datasetMock";
 import PolicyMock from "../mock/policyMock";
 import { any } from "prop-types";
 import { async } from "q";
-import { type } from "os";
 
 const server_backend = process.env.REACT_APP_BACKEND_ENDPOINT;
 const server_policy = process.env.REACT_APP_POLICY_ENDPOINT;
@@ -37,7 +34,8 @@ const reducePolicies = (list: any) => {
     }, []);
 };
 
-const initializeFormValues = (data: any) => {
+const initializeFormValues = (data: any, policies: any) => {
+    console.log(policies, "datttaa");
     if (!data) return null;
 
     return {
@@ -47,7 +45,8 @@ const initializeFormValues = (data: any) => {
         categories: reduceList(data.categories),
         provenances: reduceList(data.provenances),
         keywords: data.keywords,
-        description: data.description
+        description: data.description,
+        policies: reducePolicies(policies)
     };
 };
 
@@ -93,41 +92,21 @@ const EditPage = (props: any) => {
         }
     };
 
-    const handleDeletePolicyResponse = (response: any) => {
-        if (!response) return null;
-        console.log(response, "I REMOE HANDLE");
-        if (typeof response.data === "string" && response.data === "") {
-            //Remove deleted policy from state
-            //let updatedPolicies = policies.filter((_, i) => i !=== )
-            //setPolicies()
-        }
+    const getAllCreatedPolicies = (values: any[]) => {
+        return values.filter((value: any) => {
+            if (!value.id) return value;
+        }, []);
     };
 
     const handleSubmit = async (values: any) => {
         console.log("submitted", values);
         if (!values) return null;
-    };
-
-    const handleAddPolicy = async (values: any) => {
-        if (!values) return null; //Error handling mulig
-        values.datasetTitle = dataset.title;
-
-        await axios
-            .post(`${server_policy}`, [values])
-            .then(handlePostPolicyResponse);
-    };
-
-    const handleRemovePolicy = async (id: any) => {
-        console.log(id, " ID REMOVE");
-        await axios
-            .delete(`${server_policy}/${id}`)
-            .then(res => {
-                //Remove deleted policy from policies in state
-                setPolicies(
-                    policies.filter((policy: any) => policy.policyId !== id)
-                );
-            })
-            .catch(handleAxiosError);
+        const createPolicyBody = getAllCreatedPolicies(values.policies);
+        if (createPolicyBody.length > 0) {
+            await axios
+                .post(`${server_policy}`, createPolicyBody)
+                .then(handlePostPolicyResponse);
+        }
     };
 
     React.useEffect(() => {
@@ -153,23 +132,15 @@ const EditPage = (props: any) => {
 
     return (
         <React.Fragment>
+            <h1>Rediger</h1>
             {isLoading ? (
                 <Spinner size={30} />
             ) : (
-                <React.Fragment>
-                    <DatasetForm
-                        formInitialValues={initializeFormValues(dataset)}
-                        isEdit={true}
-                        submit={handleSubmit}
-                    />
-                    <Block marginTop="3rem">
-                        <Policy
-                            policies={policies}
-                            onAddPolicy={handleAddPolicy}
-                            onRemovePolicy={handleRemovePolicy}
-                        />
-                    </Block>
-                </React.Fragment>
+                <DatasetForm
+                    formInitialValues={initializeFormValues(dataset, policies)}
+                    isEdit={true}
+                    submit={handleSubmit}
+                />
             )}
         </React.Fragment>
     );

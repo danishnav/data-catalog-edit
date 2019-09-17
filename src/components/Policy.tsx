@@ -1,0 +1,154 @@
+import * as React from "react";
+import { withStyle, useStyletron } from "baseui";
+import {
+    StyledTable,
+    StyledHead,
+    StyledHeadCell,
+    StyledBody,
+    StyledRow,
+    StyledCell
+} from "baseui/table";
+import { Block, BlockProps } from "baseui/block";
+import { Delete } from "baseui/icon";
+import { Button, SIZE, KIND as BUTTONKIND } from "baseui/button";
+import { Input, SIZE as ButtonSIZE } from "baseui/input";
+
+const StyledBodyRow = withStyle(StyledRow, {
+    backgroundColor: "transparent",
+    borderBottom: "1px solid #E9E7E7",
+    display: "flex",
+    alignItems: "center",
+    padding: "10px"
+});
+
+type TableProps = {
+    policies: any | undefined;
+    onAddPolicy: Function;
+    onRemovePolicy: Function;
+};
+
+const inputBlockProps: BlockProps = {
+    width: "100%",
+    marginRight: "3rem"
+};
+
+const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
+    const [useCss, theme] = useStyletron();
+    const [purposeValue, setPurposeValue] = React.useState("");
+    const [legalBasisValue, setLegalBasisValue] = React.useState("");
+
+    return (
+        <React.Fragment>
+            <Block marginBottom="1rem">
+                <h2>Behandlingsgrunnlag</h2>
+            </Block>
+            <Block
+                display="flex"
+                justifyContent="space-between"
+                marginBottom="3rem"
+            >
+                <Block {...inputBlockProps}>
+                    <Input
+                        type="text"
+                        placeholder="Velg formål"
+                        value={purposeValue}
+                        onChange={event =>
+                            setPurposeValue(event.currentTarget.value)
+                        }
+                        size="compact"
+                    />
+                </Block>
+
+                <Block {...inputBlockProps}>
+                    <Input
+                        type="text"
+                        placeholder="Skriv inn rettslig grunnlag"
+                        value={legalBasisValue}
+                        onChange={event =>
+                            setLegalBasisValue(event.currentTarget.value)
+                        }
+                        size="compact"
+                    />
+                </Block>
+
+                <Block width="100%">
+                    <Button
+                        type="button"
+                        size={SIZE.compact}
+                        onClick={() => {
+                            onAddPolicy({
+                                purposeCode: purposeValue,
+                                legalBasisDescription: legalBasisValue
+                            });
+                            setPurposeValue("");
+                            setLegalBasisValue("");
+                        }}
+                    >
+                        Legg til
+                    </Button>
+                </Block>
+            </Block>
+
+            <StyledTable
+                className={useCss({
+                    marginBottom: "2rem",
+                    overflow: "hidden !important"
+                })}
+            >
+                <StyledHead>
+                    <StyledHeadCell>Formål</StyledHeadCell>
+                    <StyledHeadCell>Rettslig grunnlag</StyledHeadCell>
+                    <StyledHeadCell></StyledHeadCell>
+                </StyledHead>
+
+                <StyledBody>
+                    {policies
+                        ? policies.map((row: any, index: number) => (
+                              <StyledBodyRow key={index}>
+                                  <StyledCell>{row.purpose.code}</StyledCell>
+
+                                  <StyledCell>
+                                      {row.legalBasisDescription}
+                                  </StyledCell>
+
+                                  <StyledCell>
+                                      <Block
+                                          width="100%"
+                                          display="flex"
+                                          justifyContent="flex-end"
+                                      >
+                                          <Button
+                                              type="button"
+                                              size={ButtonSIZE.compact}
+                                              kind={BUTTONKIND.tertiary}
+                                              onClick={() =>
+                                                  onRemovePolicy(row.policyId)
+                                              }
+                                              overrides={{
+                                                  BaseButton: {
+                                                      style: ({ $theme }) => {
+                                                          return {
+                                                              backgroundColor:
+                                                                  $theme.colors
+                                                                      .warning300,
+                                                              color: "white",
+                                                              height: "2rem"
+                                                          };
+                                                      }
+                                                  }
+                                              }}
+                                          >
+                                              <Delete size={20} />
+                                          </Button>
+                                      </Block>
+                                  </StyledCell>
+                              </StyledBodyRow>
+                          ))
+                        : null}
+                </StyledBody>
+            </StyledTable>
+        </React.Fragment>
+    );
+};
+
+export default Policy;
