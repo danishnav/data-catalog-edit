@@ -10,7 +10,7 @@ import {
 } from "baseui/table";
 import { Block, BlockProps } from "baseui/block";
 import { Delete } from "baseui/icon";
-import { Button, SIZE, KIND as BUTTONKIND } from "baseui/button";
+import { Button, SIZE, KIND as BUTTONKIND, KIND } from "baseui/button";
 import { Input, SIZE as ButtonSIZE } from "baseui/input";
 
 const StyledBodyRow = withStyle(StyledRow, {
@@ -39,7 +39,8 @@ const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
 
     return (
         <React.Fragment>
-            <Block marginBottom="1rem">
+            <hr />
+            <Block marginBottom="1rem" marginTop="2rem">
                 <h2>Behandlingsgrunnlag</h2>
             </Block>
             <Block
@@ -75,6 +76,17 @@ const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
                     <Button
                         type="button"
                         size={SIZE.compact}
+                        overrides={{
+                            BaseButton: {
+                                style: ({ $theme }) => {
+                                    return {
+                                        alignContent: "center",
+                                        paddingRight: "3rem",
+                                        paddingLeft: "3rem"
+                                    };
+                                }
+                            }
+                        }}
                         onClick={() => {
                             onAddPolicy({
                                 purposeCode: purposeValue,

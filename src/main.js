@@ -13,12 +13,10 @@ class Main extends React.Component {
         return (
             <React.Fragment>
                 <ThemeProvider>
-                    <Header />
-                    <Block
-                        margin="0 auto"
-                        width="80%"
-                        height="100%"
-                    >
+                    <Block margin="scale600">
+                        <Header nav about />
+                    </Block>
+                    <Block margin="0 auto" width="80%" height="100%">
                         <Router history={history}>
                             <Routes />
                         </Router>

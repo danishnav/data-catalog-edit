@@ -116,16 +116,13 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                             alignContent="center"
                         >
                             {!isEdit ? <h1>Opprett</h1> : <h1>Rediger</h1>}
-                            <Block alignSelf="center">
+                            {/* <Block alignSelf="center">
                                 <Button
                                     type="submit"
                                     overrides={{
                                         BaseButton: {
                                             style: ({ $theme }) => {
                                                 return {
-                                                    backgroundColor:
-                                                        $theme.colors
-                                                            .primary400,
                                                     alignContent: "center",
                                                     paddingRight: "3rem",
                                                     paddingLeft: "3rem"
@@ -136,12 +133,12 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                 >
                                     Lagre
                                 </Button>
-                            </Block>
+                            </Block> */}
                         </Block>
                         <FlexGrid
                             flexGridColumnCount={3}
                             flexGridColumnGap="scale1200"
-                            flexGridRowGap="scale800"
+                            flexGridRowGap="scale1600"
                         >
                             <FlexGridItem>
                                 <Field
@@ -266,29 +263,6 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                             </FlexGridItem>
 
                             <FlexGridItem {...itemProps}>
-                                <Field
-                                    name="description"
-                                    render={({
-                                        field,
-                                        form
-                                    }: FieldProps<DatasetFormValues>) => (
-                                        <Block>
-                                            <Label1 marginBottom="8px">
-                                                Beskrivelse
-                                            </Label1>
-                                            <Textarea
-                                                {...field}
-                                                placeholder="Legg inn beskrivelse av datasettet"
-                                                size={SIZE.compact}
-                                                rows={5}
-                                            />
-                                        </Block>
-                                    )}
-                                />
-                            </FlexGridItem>
-                            <FlexGridItem display="none" />
-
-                            <FlexGridItem {...itemProps}>
                                 <FieldArray
                                     name="keywords"
                                     render={arrayHelpers => (
@@ -332,9 +306,54 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                     )}
                                 />
                             </FlexGridItem>
+                            <FlexGridItem display="none" />
+                            <FlexGridItem {...itemProps}>
+                                <Field
+                                    name="description"
+                                    render={({
+                                        field,
+                                        form
+                                    }: FieldProps<DatasetFormValues>) => (
+                                        <Block>
+                                            <Label1 marginBottom="8px">
+                                                Beskrivelse
+                                            </Label1>
+                                            <Textarea
+                                                {...field}
+                                                placeholder="Legg inn beskrivelse av datasettet"
+                                                size={SIZE.compact}
+                                                rows={5}
+                                            />
+                                        </Block>
+                                    )}
+                                />
+                            </FlexGridItem>
                         </FlexGrid>
 
-                        <Block marginTop="2rem" width="100%"></Block>
+                        <Block
+                            marginTop="2rem"
+                            width="100%"
+                            display="flex"
+                            justifyContent="flex-end"
+                        >
+                            <Button
+                                type="submit"
+                                kind={ButtonKind.secondary}
+                                overrides={{
+                                    BaseButton: {
+                                        style: ({ $theme }) => {
+                                            return {
+                                                alignContent: "center",
+                                                paddingRight: "3rem",
+                                                paddingLeft: "3rem"
+                                            };
+                                        }
+                                    }
+                                }}
+                            >
+                                Lagre Endringer
+                            </Button>
+                        </Block>
                     </Form>
                 )}
             />

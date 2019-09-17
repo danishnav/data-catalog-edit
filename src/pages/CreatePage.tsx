@@ -37,7 +37,7 @@ const CreatePage = () => {
     //TODO - sette opp error handling
     const handleSubmit = (values: object) => {
         let body = [values];
-        console.log(body, "submittes")
+        console.log(body, "submittes");
         //axios.post(`${serverBackend}`, body).then(res => console.log(res));
         setCreated(true);
     };
@@ -45,7 +45,6 @@ const CreatePage = () => {
     return (
         <React.Fragment>
             <Block>
-                <h1>Datasett</h1>
                 {isCreated
                     ? renderSuccessMessage("Datasettet er nå opprettet.")
                     : null}
