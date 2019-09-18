@@ -148,7 +148,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                         form
                                     }: FieldProps<DatasetFormValues>) => (
                                         <FormControl label="Title">
-                                            <Input {...field} size="compact" />
+                                            <Input {...field} />
                                         </FormControl>
                                     )}
                                 />
@@ -161,7 +161,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                         form
                                     }: FieldProps<DatasetFormValues>) => (
                                         <FormControl label="Type">
-                                            <Input {...field} size="compact" />
+                                            <Input {...field} />
                                         </FormControl>
                                     )}
                                 />
@@ -174,7 +174,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                         form
                                     }: FieldProps<DatasetFormValues>) => (
                                         <FormControl label="PI">
-                                            <Input {...field} size="compact" />
+                                            <Input {...field} />
                                         </FormControl>
                                     )}
                                 />
@@ -208,7 +208,6 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                         );
                                                     }}
                                                     value={value}
-                                                    size="compact"
                                                 />
                                             </Block>
                                             {renderTagList(
@@ -250,7 +249,6 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                     value={
                                                         currentProvenanceValue
                                                     }
-                                                    size="compact"
                                                 />
                                             </Block>
                                             {renderTagList(
@@ -286,7 +284,6 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                         <Button
                                                             type="button"
                                                             shape={SHAPE.square}
-                                                            size="compact"
                                                             onClick={() =>
                                                                 arrayHelpers.push(
                                                                     currentKeywordValue
@@ -321,8 +318,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                             <Textarea
                                                 {...field}
                                                 placeholder="Legg inn beskrivelse av datasettet"
-                                                size={SIZE.compact}
-                                                rows={5}
+                                                rows={6}
                                             />
                                         </Block>
                                     )}
@@ -338,7 +334,6 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                         >
                             <Button
                                 type="submit"
-                                kind={ButtonKind.secondary}
                                 overrides={{
                                     BaseButton: {
                                         style: ({ $theme }) => {

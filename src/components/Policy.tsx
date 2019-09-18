@@ -29,7 +29,7 @@ type TableProps = {
 
 const inputBlockProps: BlockProps = {
     width: "100%",
-    marginRight: "3rem"
+    marginRight: "2rem"
 };
 
 const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
@@ -56,7 +56,6 @@ const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
                         onChange={event =>
                             setPurposeValue(event.currentTarget.value)
                         }
-                        size="compact"
                     />
                 </Block>
 
@@ -68,37 +67,32 @@ const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
                         onChange={event =>
                             setLegalBasisValue(event.currentTarget.value)
                         }
-                        size="compact"
                     />
                 </Block>
-
-                <Block width="100%">
-                    <Button
-                        type="button"
-                        size={SIZE.compact}
-                        overrides={{
-                            BaseButton: {
-                                style: ({ $theme }) => {
-                                    return {
-                                        alignContent: "center",
-                                        paddingRight: "3rem",
-                                        paddingLeft: "3rem"
-                                    };
-                                }
+                <Button
+                    type="button"
+                    size={SIZE.compact}
+                    overrides={{
+                        BaseButton: {
+                            style: ({ $theme }) => {
+                                return {
+                                    paddingRight: "3rem",
+                                    paddingLeft: "3rem"
+                                };
                             }
-                        }}
-                        onClick={() => {
-                            onAddPolicy({
-                                purposeCode: purposeValue,
-                                legalBasisDescription: legalBasisValue
-                            });
-                            setPurposeValue("");
-                            setLegalBasisValue("");
-                        }}
-                    >
-                        Legg til
-                    </Button>
-                </Block>
+                        }
+                    }}
+                    onClick={() => {
+                        onAddPolicy({
+                            purposeCode: purposeValue,
+                            legalBasisDescription: legalBasisValue
+                        });
+                        setPurposeValue("");
+                        setLegalBasisValue("");
+                    }}
+                >
+                    Lagre
+                </Button>
             </Block>
 
             <StyledTable
