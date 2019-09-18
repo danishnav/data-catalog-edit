@@ -60,7 +60,6 @@ const CreatePage = () => {
     //TODO - sette opp error handling
     const handleSubmit = (values: object) => {
         let body = [values];
-        console.log(body, "submittes");
         axios.post(`${server_backend}`, body).then(res => console.log(res));
         setCreated(true);
     };
