@@ -14,3 +14,9 @@ export interface DatasetFormValues {
     keywords: string[] | null[] | null;
     policies?: any | null;
 }
+
+export interface Codelist {
+    PURPOSE: any | undefined | null;
+    CATEGORY: any | undefined | null;
+    PROVENANCE: any | undefined | null;
+}

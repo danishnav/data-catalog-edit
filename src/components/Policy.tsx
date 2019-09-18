@@ -12,6 +12,7 @@ import { Block, BlockProps } from "baseui/block";
 import { Delete } from "baseui/icon";
 import { Button, SIZE, KIND as BUTTONKIND, KIND } from "baseui/button";
 import { Input, SIZE as ButtonSIZE } from "baseui/input";
+import { Select, Value } from "baseui/select";
 
 const StyledBodyRow = withStyle(StyledRow, {
     backgroundColor: "transparent",
@@ -34,7 +35,7 @@ const inputBlockProps: BlockProps = {
 
 const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
     const [useCss, theme] = useStyletron();
-    const [purposeValue, setPurposeValue] = React.useState("");
+    const [purposeValue, setPurposeValue] = React.useState();
     const [legalBasisValue, setLegalBasisValue] = React.useState("");
 
     return (
@@ -49,6 +50,18 @@ const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
                 marginBottom="3rem"
             >
                 <Block {...inputBlockProps}>
+                    {/* <Select
+                        options={[{ id: "TEXT" }]}
+                        labelKey="id"
+                        valueKey="id"
+                        maxDropdownHeight="300px"
+                        onChange={({ value }) => {
+                            setPurposeValue(value);
+                            console.log("selected", value);
+                            //arrayHelpers.push(option ? option.id : null);
+                        }}
+                        value={purposeValue}
+                    /> */}
                     <Input
                         type="text"
                         placeholder="Velg formål"
@@ -84,10 +97,10 @@ const Policy = ({ policies, onAddPolicy, onRemovePolicy }: TableProps) => {
                     }}
                     onClick={() => {
                         onAddPolicy({
-                            purposeCode: purposeValue,
+                            purposeCode: purposeValue[0].id,
                             legalBasisDescription: legalBasisValue
                         });
-                        setPurposeValue("");
+                        setPurposeValue([]);
                         setLegalBasisValue("");
                     }}
                 >

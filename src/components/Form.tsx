@@ -20,13 +20,17 @@ import { Tag, KIND, VARIANT } from "baseui/tag";
 import { Select, TYPE, Value } from "baseui/select";
 import { Label1 } from "baseui/typography";
 
-import { DatasetFormValues } from "../constants";
-import Codelist from "../mockCodelist";
+import { DatasetFormValues, Codelist } from "../constants";
 
 type FormProps = {
     formInitialValues: DatasetFormValues | any;
     submit: Function;
     isEdit?: boolean;
+    codelist: {
+        CATEGORY: any;
+        PURPOSE: any;
+        PROVENANCE: any;
+    };
 };
 
 const rowBlockProps: BlockProps = {
@@ -70,7 +74,12 @@ function renderTagList(
     );
 }
 
-const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
+const DatasetForm = ({
+    formInitialValues,
+    submit,
+    isEdit,
+    codelist
+}: FormProps) => {
     const [value, setValue] = React.useState<Value>([]);
     const [currentProvenanceValue, setCurrentProvenanceValue] = React.useState(
         []
@@ -78,7 +87,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
     const [currentKeywordValue, setCurrentKeywordValue] = React.useState("");
 
     const getParsedOptions = (
-        codelist: object | undefined,
+        codelist: object | undefined | null,
         provenances: any | undefined
     ) => {
         if (!codelist) return [];
@@ -116,24 +125,6 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                             alignContent="center"
                         >
                             {!isEdit ? <h1>Opprett</h1> : <h1>Rediger</h1>}
-                            {/* <Block alignSelf="center">
-                                <Button
-                                    type="submit"
-                                    overrides={{
-                                        BaseButton: {
-                                            style: ({ $theme }) => {
-                                                return {
-                                                    alignContent: "center",
-                                                    paddingRight: "3rem",
-                                                    paddingLeft: "3rem"
-                                                };
-                                            }
-                                        }
-                                    }}
-                                >
-                                    Lagre
-                                </Button>
-                            </Block> */}
                         </Block>
                         <FlexGrid
                             flexGridColumnCount={3}
@@ -191,7 +182,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                 </Label1>
                                                 <Select
                                                     options={getParsedOptions(
-                                                        Codelist.CATEGORY,
+                                                        codelist.CATEGORY,
                                                         formikBag.values
                                                             .categories
                                                     )}
@@ -230,7 +221,7 @@ const DatasetForm = ({ formInitialValues, submit, isEdit }: FormProps) => {
                                                 </Label1>
                                                 <Select
                                                     options={getParsedOptions(
-                                                        Codelist.PROVENANCE,
+                                                        codelist.PROVENANCE,
                                                         formikBag.values
                                                             .provenances
                                                     )}

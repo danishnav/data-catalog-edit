@@ -5,14 +5,10 @@ import { Spinner } from "baseui/spinner";
 import { Block } from "baseui/block";
 
 import Policy from "../components/Policy";
-import DatasetMock from "../mock/datasetMock";
-import PolicyMock from "../mock/policyMock";
-import { any } from "prop-types";
-import { async } from "q";
-import { type } from "os";
 
 const server_backend = process.env.REACT_APP_BACKEND_ENDPOINT;
 const server_policy = process.env.REACT_APP_POLICY_ENDPOINT;
+const server_codelist = process.env.REACT_APP_CODELIST_ENDPOINT;
 
 const reduceList = (list: any) => {
     if (!list) return;
@@ -21,21 +17,21 @@ const reduceList = (list: any) => {
     }, []);
 };
 
-const reducePolicies = (list: any) => {
-    if (!list) return;
+// const reducePolicies = (list: any) => {
+//     if (!list) return;
 
-    return list.reduce((acc: any, curr: any) => {
-        return [
-            ...acc,
-            {
-                datasetTitle: curr.dataset.title,
-                id: curr.policyId,
-                purposeCode: curr.purpose.code,
-                legalBasisDescription: curr.legalBasisDescription
-            }
-        ];
-    }, []);
-};
+//     return list.reduce((acc: any, curr: any) => {
+//         return [
+//             ...acc,
+//             {
+//                 datasetTitle: curr.dataset.title,
+//                 id: curr.policyId,
+//                 purposeCode: curr.purpose.code,
+//                 legalBasisDescription: curr.legalBasisDescription
+//             }
+//         ];
+//     }, []);
+// };
 
 const initializeFormValues = (data: any) => {
     if (!data) return null;
@@ -54,6 +50,7 @@ const initializeFormValues = (data: any) => {
 const EditPage = (props: any) => {
     const [dataset, setDataset] = React.useState();
     const [policies, setPolicies] = React.useState();
+    const [codelist, setCodelist] = React.useState();
     const [error, setError] = React.useState(null);
     const [isLoading, setLoading] = React.useState(true);
 
@@ -86,26 +83,26 @@ const EditPage = (props: any) => {
 
     const handlePostPolicyResponse = (response: any) => {
         if (!response) return null;
-        console.log(response, "RESPONSE");
 
         if (Array.isArray(response.data) && response.data !== null) {
             setPolicies([...policies, ...response.data]);
         }
     };
 
-    const handleDeletePolicyResponse = (response: any) => {
-        if (!response) return null;
-        console.log(response, "I REMOE HANDLE");
-        if (typeof response.data === "string" && response.data === "") {
-            //Remove deleted policy from state
-            //let updatedPolicies = policies.filter((_, i) => i !=== )
-            //setPolicies()
+    const handlePutDatasetResponse = (response: any) => {
+        if (typeof response.data === "object" && response.data !== null) {
+            setDataset(response.data);
+        } else {
+            setError(response.data);
         }
     };
 
     const handleSubmit = async (values: any) => {
-        console.log("submitted", values);
         if (!values) return null;
+
+        await axios
+            .put(`${server_backend}/${dataset.id}`, values)
+            .then(handlePostPolicyResponse);
     };
 
     const handleAddPolicy = async (values: any) => {
@@ -114,7 +111,7 @@ const EditPage = (props: any) => {
 
         await axios
             .post(`${server_policy}`, [values])
-            .then(handlePostPolicyResponse);
+            .then(handlePutDatasetResponse);
     };
 
     const handleRemovePolicy = async (id: any) => {
@@ -122,12 +119,20 @@ const EditPage = (props: any) => {
         await axios
             .delete(`${server_policy}/${id}`)
             .then(res => {
-                //Remove deleted policy from policies in state
+                //Remove deleted policy from policies state
                 setPolicies(
                     policies.filter((policy: any) => policy.policyId !== id)
                 );
             })
             .catch(handleAxiosError);
+    };
+
+    const handleGetCodelistResponse = (response: any) => {
+        if (typeof response.data === "object" && response.data !== null) {
+            setCodelist(response.data);
+        } else {
+            setError(response.data);
+        }
     };
 
     React.useEffect(() => {
@@ -143,6 +148,11 @@ const EditPage = (props: any) => {
                     `${server_policy}?datasetId=${props.match.params.id}&pageSize=100`
                 )
                 .then(handleGetPolicyResponse)
+                .catch(handleAxiosError);
+
+            await axios
+                .get(`${server_codelist}`)
+                .then(handleGetCodelistResponse)
                 .catch(handleAxiosError);
 
             setLoading(false);
@@ -161,6 +171,7 @@ const EditPage = (props: any) => {
                         formInitialValues={initializeFormValues(dataset)}
                         isEdit={true}
                         submit={handleSubmit}
+                        codelist={codelist}
                     />
                     <Block marginTop="3rem">
                         <Policy
